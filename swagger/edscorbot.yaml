@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  description: "It provides REST APIs to access the functions of the robotic arm such as sending commands (to move the arm) and collect data (current positions/values)"
+  version: "1.0.0"
+  title: "ED-Scorbot API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "adalberto@computacao.ufcg.edu.br"
+  license:
+    name: "Apache 2.0 (TO BE DEFINED)"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+tags:
+- name: basic
+  description: Basic functions to be invoked before moving the arm
+- name: movement
+  description: Functions to move the arm according to a trajectory (sequence of points). A point is a quadruple (J1Ref, J2Ref, J3Ref, J4Ref) of references to be assigned to each joint
+
+paths:
+  /connect:
+    post:
+      tags:
+      - basic
+      summary: Tries to establish BasicAction with the robotic arm
+      description: This action requires a specific header containing an authorization token obtained in previus login. This route must be invoked to provide access to the arm before any other interaction
+      responses:
+        200:
+          description: Connection established
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicAction'
+        409:
+          description: Connection not established
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Server is busy - connection not established
+                  status: server busy
+        500:
+          description: Some other internal error occurred in the server when trying to connect
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Server internal error - connection not established
+                  status: server error
+  /disconnect:
+    post:
+      tags:
+      - basic
+      summary: Tries to disconnect and release the robotic arm
+      description: This action requires a specific header containing an authorization token obtained in previus login. This route must be invoked when the interaction with the robot has finished in order to release the arm
+      responses:
+        200:
+          description: Arm succesfully disconnected
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Arm disconnected
+                  status: disconnected
+        500:
+          description: Some internal error occurred in the server
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Server internal error
+                  status: server error
+  /move:
+    post:
+      tags:
+      - movement
+      summary: Moves the arm according to a trajectory and returns the last point of the trajectory
+      description: This action tries to move the arm following the trajectory given as parameter
+      requestBody:
+        description: The trajectory to be send to the arm
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trajectory'
+      responses:
+        200:
+          description: Arm moved according to the given trajectory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        500:
+          description: Some internal error occurred in the server when applying trajectory
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Server internal error - trajectory not applied completely
+                  status: server error
+  /searchHome:
+    post:
+      tags:
+      - movement
+      summary: Tries to position the arm in its home position.
+      description: This route tries to position the arm in its home position. It must be invoked before each command to move the arm
+      responses:
+        200:
+          description: Arm successfully moved to the home position
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Arm moved to home position
+                  status: arm moved
+        500:
+          description: Arm not moved to the home position
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Server internal error - arm not moved to home position
+                  status: server error
+components:
+  schemas:
+    BasicAction:
+      description: An action representing the result of a basic interaction with the arm. It encapsulates an intuitive message and a status (of the interaction)
+      properties:
+        message:
+          type: string
+          example: Some message from the server
+        status:
+          type: string
+          enum:
+            - connected
+            - disconnected
+            - arm moved
+            - server busy
+            - server error
+    Point:
+      description: A quadruple representing a point assumed by all joints of a robot. The order of the joints is (J1,J2,J3,J4)
+      properties:
+        j1Ref:
+          type: integer
+          description: The ref value for joint 1. The possible values are [-450,500]
+        j2Ref: 
+          type: integer
+          description: The ref value for joint 2. The possible values are [-950,800]
+        j3Ref: 
+          type: integer
+          description: The ref value for joint 3. The possible values are [-350,350]
+        j4Ref: 
+          type: integer
+          description: The ref value for joint 4. The possible values are [-1500,1600]
+    
+    Trajectory:
+      description: An array of points to be applied to the arm.
+      type: array
+      items:
+        $ref: '#/components/schemas/Point'
