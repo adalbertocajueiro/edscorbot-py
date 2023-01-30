@@ -15,4 +15,4 @@ The server is a simple file. Before starting the server, install de dependencies
 * To see and interact with the server use its Swagger by accessing http://localhost:8080/ui in your browser
 
 ## Extra information
-* Information about routing in connection are available at https://connexion.readthedocs.io/en/latest/routing.html
+* Information about routing in connexion are available at https://connexion.readthedocs.io/en/latest/routing.html
