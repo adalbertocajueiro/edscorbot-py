@@ -4,9 +4,9 @@
 This is the project containing the wrapper for the ED-Scorbot robotic arm to make it available
 trought a REST API. 
 
-The server is a simple file. Before starting the server, install de dependencies:
-* connection
-* logging
+The server is a simple implementation. Before starting the server, install de dependencies:
+* connexion (`pip install connexion`)
+* logging (`pip install logging`)
 
 ## Running instructions
 * This simple server has been tested in Python 3.10.5 
