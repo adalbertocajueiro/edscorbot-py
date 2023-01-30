@@ -1,6 +1,20 @@
 openapi: 3.0.3
 info:
-  description: "It provides REST APIs to access the functions of the robotic arm such as sending commands (to move the arm) and collect data (current positions/values)"
+  description: |- 
+    This is a Web API containing the services to interact with the Ed-Scorbot Arm of University of Seville.
+    The aim of this service is to "represent" the robotic arm (as a service) to authorized clients 
+    via REST architecture. 
+    Currently, the server is temporarily using a fake lib that mimics the robotic arm and, therefore, 
+    the returned values have just an exhibition purpose!
+    You can find more information about the data exchanged from and to the service at the bottom of this page. 
+    
+    The documentation about the routes are available individually. 
+    
+    Some useful links:
+    - This server has been developed using the [Connexion](https://connexion.readthedocs.io/en/latest/index.html) framework, which is on top of Flask.
+      You can find more information about it to complete its implementation.
+    - [The EDScorbot python web api](https://github.com/adalbertocajueiro/edscorbot-py) is available for download.
+
   version: "1.0.0"
   title: "ED-Scorbot API"
   termsOfService: "http://swagger.io/terms/"
@@ -12,7 +26,7 @@ info:
 
 tags:
 - name: basic
-  description: Basic functions to be invoked before moving the arm
+  description: Basic functions to be invoked before moving the arm. 
 - name: movement
   description: Functions to move the arm according to a trajectory (sequence of points). A point is a quadruple (J1Ref, J2Ref, J3Ref, J4Ref) of references to be assigned to each joint
 
@@ -23,6 +37,7 @@ paths:
       - basic
       summary: Tries to establish BasicAction with the robotic arm
       description: This action requires a specific header containing an authorization token obtained in previus login. This route must be invoked to provide access to the arm before any other interaction
+      operationId: edscorbot_api.connect
       responses:
         200:
           description: Connection established
@@ -52,6 +67,7 @@ paths:
       - basic
       summary: Tries to disconnect and release the robotic arm
       description: This action requires a specific header containing an authorization token obtained in previus login. This route must be invoked when the interaction with the robot has finished in order to release the arm
+      operationId: edscorbot_api.disconnect
       responses:
         200:
           description: Arm succesfully disconnected
@@ -75,7 +91,9 @@ paths:
       - movement
       summary: Moves the arm according to a trajectory and returns the last point of the trajectory
       description: This action tries to move the arm following the trajectory given as parameter
+      operationId: edscorbot_api.move
       requestBody:
+        x-body-name: trajectory
         description: The trajectory to be send to the arm
         required: true
         content:
@@ -103,6 +121,7 @@ paths:
       - movement
       summary: Tries to position the arm in its home position.
       description: This route tries to position the arm in its home position. It must be invoked before each command to move the arm
+      operationId: edscorbot_api.searchHome
       responses:
         200:
           description: Arm successfully moved to the home position
