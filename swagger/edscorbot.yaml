@@ -106,7 +106,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Point'
+                example: 
+                  message: Arm moved according to a given trajectory
+                  status: arm moved
         500:
           description: Some internal error occurred in the server when applying trajectory
           content:
