@@ -18,6 +18,28 @@
     * for the sake of a better design, this module can be encapsulated into a singleton
 '''
 
+def npyToJson(sourceType, targetType,filePath):
+    """
+    It converts a EDScorbot NPY file in JSON format. The NPY file contains an array of arrays (N-dimensional)
+    containing points (a tuple of coordinates). The value N depends of the number of joints of each arm.
+    Depending on the target type, it applies transformation functions between the source and the target types.
+    These functions are defined for each arm.
+
+    :return: a JSON containing all points of the arm with a specific target type
+    """
+    return {'message':'Json generated'}
+
+def npyToJsonPost(filePath,sourceType, targetType):
+    """
+    It converts a EDScorbot NPY file in JSON format. The NPY file contains an array of arrays (N-dimensional)
+    containing points (a tuple of coordinates). The value N depends of the number of joints of each arm.
+    Depending on the target type, it applies transformation functions between the source and the target types.
+    These functions are defined for each arm.
+
+    :return: a JSON containing all points of the arm with a specific target type
+    """
+    return {'message':'Json generated'}
+  
 def connect():
     ''' it calls the openUSB function in pyAER api/lib and returns the suitable result '''
     return {'message':'Connected to the server', 'status':'connected'}

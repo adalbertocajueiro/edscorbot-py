@@ -32,6 +32,6 @@ evolves, these functions will be replaced with those from the real implementatio
 * To see and interact with the server use its Swagger by accessing http://localhost:8080/ui in your browser
 
 ### Extra information
-* [Connexion](hhttps://connexion.readthedocs.io/en/latest/routing.html) - information about the connexion library, used to implement the Web controller layer
+* [Connexion](https://connexion.readthedocs.io/en/latest/routing.html) - information about the connexion library, used to implement the Web controller layer
 * [Ed Scorbot Python] (https://github.com/RTC-research-group/Py-EDScorbotTool) - the Github projectcontaining the library (real implementation) of elementary/low level functions to access the robotic arm
 * [Ed Scorbot Documentation] (https://py-edscorbottool.readthedocs.io/en/latest/) - the user documentation/guide of the ED Scorbot tools (GUI, command line and detailed configurations). 

@@ -25,12 +25,88 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 
 tags:
+- name: translation
+  description: Basic functions to convert from NPY to JSON. 
 - name: basic
   description: Basic functions to be invoked before moving the arm. 
 - name: movement
   description: Functions to move the arm according to a trajectory (sequence of points). A point is a quadruple (J1Ref, J2Ref, J3Ref, J4Ref) of references to be assigned to each joint
 
 paths:
+  /npytojson:
+    get:
+      tags:
+      - translation
+      summary: Converts a NPY file into JSON with a specific type information
+      description: This action requires a source and a target types of the coordinates of a point.
+      operationId: edscorbot_api.npyToJson
+      parameters:
+        - in: query
+          name: filePath
+          schema:
+            type: string
+          required: true
+          description: The file to be converted
+        - in: query
+          name: sourceType
+          schema:
+            type: string
+          required: true
+          description: The type of the source information
+        - in: query
+          name: targetType
+          schema:
+            type: string
+          required: true
+          description: the type of the target information
+      responses:
+        200:
+          description: Translation success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trajectory'
+        500:
+          description: Some other internal error occurred in the server when trying to connect
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Translation error
+                  status: server error
+  /npytojsonpost:  
+    post:
+      tags:
+      - translation
+      operationId: edscorbot_api.npyToJsonPost
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sourceType:
+                  type: string
+                targetType:
+                  type: string
+                filePath:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Translation success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trajectory'
+        500:
+          description: Some other internal error occurred in the server when trying to connect
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Translation error
+                  status: server error
   /connect:
     post:
       tags:
@@ -157,24 +233,18 @@ components:
             - arm moved
             - server busy
             - server error
+    Joint:
+      type: integer
+      description: The reference value (angle) of a joint.
+      
     Point:
-      description: A quadruple representing a point assumed by all joints of a robot. The order of the joints is (J1,J2,J3,J4)
-      properties:
-        j1Ref:
-          type: integer
-          description: The ref value for joint 1. The possible values are [-450,500]
-        j2Ref: 
-          type: integer
-          description: The ref value for joint 2. The possible values are [-950,800]
-        j3Ref: 
-          type: integer
-          description: The ref value for joint 3. The possible values are [-350,350]
-        j4Ref: 
-          type: integer
-          description: The ref value for joint 4. The possible values are [-1500,1600]
+      type: array
+      description: A tuple (set of coordinates) containing (possibly many) information about the angles of the joints and one information (the last coordinate) meaning the time to wait before accepting the next move command. The representation of a point as an array allows many robots to be handled as there is no fixed number of joints. This is formation should be obtained bu clients before connecting to a specific arm. 
+      items:
+        $ref: '#/components/schemas/Joint'
     
     Trajectory:
-      description: An array of points to be applied to the arm.
       type: array
+      description: A array of points to be applied to the arm.
       items:
         $ref: '#/components/schemas/Point'
