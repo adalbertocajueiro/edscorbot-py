@@ -1,6 +1,7 @@
 import numpy as np
 import json
 import os
+from datetime import datetime
 
 ident = 2
 
@@ -12,10 +13,12 @@ def convertNpy(file,sourceType,targetType,outputFolder):
     json_str = json.dumps(convertedList)
     nameParts = file.split("/")
     name = nameParts[len(nameParts) - 1].split(".")
-    convertedFileName = os.path.join(outputFolder, name[0] + ".json")
+    now = datetime.now()
+    convertedFileName = os.path.join(outputFolder, name[0] + "-" + now.strftime("%m-%d-%Y_%H:%M:%S") + ".json")
     with open(convertedFileName, "w") as outfile:
         outfile.write(json_str)
-    
+        
+    print('converted file ', convertedFileName)
     return convertedFileName
 
 def realConvert(list,sourceType,targetType):
@@ -30,4 +33,7 @@ def convertPoint(point, sourceType,targetType):
     return lowLevelConvertion(point,sourceType,targetType)
 
 def lowLevelConvertion(point,sourceType,targetType):
+    """
+        if sourceType = 0 (ANGLE) and 
+    """
     return [0,0,0]

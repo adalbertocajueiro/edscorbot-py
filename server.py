@@ -14,7 +14,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def hello():
     return 'Hello'
 
-@app.route('/convert' , methods = ['POST'])
+@app.route('/python/convert' , methods = ['POST'])
 def convertFile():
     """
         It converts a EDScorbot NPY file in JSON format. The NPY file contains an array of arrays (N-dimensional)
