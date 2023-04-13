@@ -27,6 +27,7 @@ def convertFile():
     f = request.files['file']
     srcType = int(request.form['sourceType'])
     tgtType = int(request.form['targetType'])
+    hasTimeInfo = request.form['hasTimeInfo'].lower() == "true"
     
     #filename = secure_filename(f.filename)
     filename = secure_filename(f.filename)
@@ -35,7 +36,7 @@ def convertFile():
     file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     print('file ', file)
     f.save(file)
-    outputFileName = api.convertNpy(file,srcType,tgtType,app.config['UPLOAD_FOLDER'])
+    outputFileName = api.convertNpy(file,srcType,tgtType,app.config['UPLOAD_FOLDER'],hasTimeInfo)
         
     return send_file(outputFileName, as_attachment=True)
 
