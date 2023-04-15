@@ -1,37 +1,32 @@
 # Getting Started
-This is the project containing the wrapper for the ED-Scorbot robotic arm to make it available
-trought a REST API. This microservice is **strinctly** intended to provide end-points for users
-interact directly with the robotic arm. 
+This is the project containing a microservice for providing conversion support of NPY files into JSON format.
+This microservice is **strinctly** used in the context of the EDScorbot front-end to reduce the effort on manipulation NPY files externally before sending its content to the robotic arm in JSON or TSV format.
 
-In its architecture, the controller layer reuses a Python library with low level funcions to 
-interact with the robotic arm. Therefore, this service is hosted at a computer connected
-to the robotic arm trought USB. 
+The service itself is a simple Flask server containing a single route. 
 
-The service also implements features to handle que robot suitably such as, establishing the 
-direct USB connection with the arm before any interaction with it, controlling all concurrent
-access to the arm (if different users try to control the arm at the same time), moving the arm
-to the home position before sending other commands to it, and so on. 
-
-### ED-Scorbot Python Wrapper/Server
-The server is a simple implementation. Before starting the server, install de dependencies:
-* connexion (`pip install connexion`)
-* logging (`pip install logging`)
+### Dependencies
+Run these commands to install the dependencies if necessary:
+* Flask (`pip install flask`)
+* Flask CORS (`pip install flask_cors`)
+* Werkzeug (`pip install werkzeug`)
+* Numpy (`pip install numpy`)
+* Json (`pip install json`)
+* Datetime (`pip install datetime`)
 
 ### Files
-* `edscorbot_webapi.py` - a simple server that puts the service running. This contains the high level
-microservice and must be suitably *linked* with the loe level Python library. 
-* `edscorbot_api.py` - this is a basic implementation of the Python library for direct interaction with the robotic arm. It also  contains comments regarding the features considered in its implementation. 
-Currently, the implemented functions just contain *fake* bodies that return some value. As the project
-evolves, these functions will be replaced with those from the real implementation, desirably using a low coupling architecture/patterns. 
-* `swagger/escorbot.yaml` - the openapi documentation about the routes and the Web API. It also links the routes with the functions to be executed when invoked.
+* `server.py` - a simple server that puts the service running.
+* `server_api.py` - the high level function implementing the conversion of NPY into JSON file. 
+* `conversions.py` - the low level functions for converting coordiantes among the types DEGREES, RADIANS and RERECENCES.
+* `edscobrot.yaml` - the openapi specification of the microservice
 
 ### Running instructions
 * This simple server has been tested in Python 3.10.5 
-* Type the command `python edscorbot_webapi.py` and the server should be up
-* Make sure that the port 8080 is not in use
-* To see and interact with the server use its Swagger by accessing http://localhost:8080/ui in your browser
+* Type the command `python server.py` and the server should be up
+* Make sure that the port 5000 is not in use
+* You can test the route `/python/convert` via POST method using tools like Postman or Insomnia
+
+### Adding characteristics of a new robotic arm
 
 ### Extra information
-* [Connexion](https://connexion.readthedocs.io/en/latest/routing.html) - information about the connexion library, used to implement the Web controller layer
-* [Ed Scorbot Python] (https://github.com/RTC-research-group/Py-EDScorbotTool) - the Github projectcontaining the library (real implementation) of elementary/low level functions to access the robotic arm
+* [Ed Scorbot Python] (https://github.com/RTC-research-group/Py-EDScorbotTool) - the Github project containing the library (real implementation) of elementary/low level functions to access the robotic arm
 * [Ed Scorbot Documentation] (https://py-edscorbottool.readthedocs.io/en/latest/) - the user documentation/guide of the ED Scorbot tools (GUI, command line and detailed configurations). 
