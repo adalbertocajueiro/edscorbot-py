@@ -5,7 +5,27 @@ from datetime import datetime
 from math import pi
 import conversions as convFunctions
 
+
 def convertNpy(file,sourceType,targetType,outputFolder,hasTimeInfo):
+    """
+    The conversion function to be applies in all points of a file in order to produce
+    a JSON output of transformed points.
+    
+    Args:
+        file (file): The NPY file containing all points to be converted
+        
+        sourceType: The type of the information of each point: DEGREES(1), RADIANS(2) or REFERENCES(3)
+        
+        targetType: The type of the target information of each point: DEGREES(1), RADIANS(2) or REFERENCES(3)
+        
+        outputFolder: The folder where the translated content will be saved
+        
+        hasTimeInfo: A flag to inform if the file contains time information as las coordinate of each point
+ 
+    Returns:
+        string: The name of the saved file
+    """
+    
     arr = np.load(file)
     list = arr.tolist()
     #apply the conversion between sourceTye and targetType. they can assume values 1 (DEGREE),2(RADIANS),3 (REFS) and 4 (COUTNERS)

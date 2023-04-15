@@ -17,22 +17,21 @@ def hello():
 @app.route('/python/convert' , methods = ['POST'])
 def convertFile():
     """
-        It converts a EDScorbot NPY file in JSON format. The NPY file contains an array of arrays (N-dimensional)
-        containing points (a tuple of coordinates). The value N depends of the number of joints of each arm.
-        Depending on the target type, it applies transformation functions between the source and the target types.
-        These functions are defined for each arm. the types can be DEGREES (1), RADIANS(2) REFS(3) and COUNTERS(4)
+    It converts a EDScorbot NPY file in JSON format. The NPY file contains an array of arrays (N-dimensional)
+    containing points. Each point is a tuple of coordinates with three possible types: angles in DEGREES(1),
+    angles in RADIANS(2) or REFERENCE VALUES(3). If a waiting time information is present in the last 
+    coordinate, the conversion is applied to all previous points. Otherwise, the conversion is applied
+    to all points.
 
-        :return: a JSON containing all points of the arm with a specific target type
+    :return: a JSON containing all points of the arm with a specific target type
     """
     f = request.files['file']
     srcType = int(request.form['sourceType'])
     tgtType = int(request.form['targetType'])
     hasTimeInfo = request.form['hasTimeInfo'].lower() == "true"
     
-    #filename = secure_filename(f.filename)
     filename = secure_filename(f.filename)
     
-    #f.save(filename)
     file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     print('file ', file)
     f.save(file)
