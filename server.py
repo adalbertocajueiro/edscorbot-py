@@ -10,10 +10,6 @@ app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@app.route("/",methods=['GET'])
-def hello():
-    return 'Hello'
-
 @app.route('/python/convert' , methods = ['POST'])
 def convertFile():
     """
