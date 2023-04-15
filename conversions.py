@@ -1,44 +1,19 @@
 
-def count_to_angle(motor, count):
-    f = lambda x:0
-    if motor == 1:
-        f = lambda x:(1 / 125.5) * (x - 32768)
-    elif motor == 2:
-        f = lambda x:(1 / 131) * (x - 32768)
-    elif motor == 3:
-        f = lambda x:(1 / 127.7) * (count - 32768)
-    elif motor ==4:
-        f = lambda x:(0.012391573729863692) * (count - 32768)
-    
-    return f(count)
+"""
+    This modulueprovides conversions fuctions used by the front-end. 
+    These functions are applicable individually to each motor to convert
+    values between angles (degrees or radians) 
+"""
 
-def ref_to_count(motor, ref):
-    f = lambda x:0
-    if motor == 1:
-        f = lambda x:(40.35269645959781 * x) + 32768
-    elif motor == 2:
-        f = lambda x:(14.770677455806219 * x) + 32768
-    elif motor == 3:
-        f = lambda x:(41.6752813118148 * x) + 32768
-    elif motor ==4:
-        f = lambda x:(4.582209206643176 * x) + 32768
-    
-    return f(ref)
+from math import pi
 
-def count_to_ref(motor, count):
-    f = lambda x:0
-    if motor == 1:
-        f = lambda x:(0.02478) * (x - 32768)
-    elif motor == 2:
-        f = lambda x:(0.0677) * (x - 32768)
-    elif motor == 3:
-        f = lambda x:(0.02399) * (x - 32768)
-    elif motor ==4:
-        f = lambda x:(0.2182353) * (x - 32768)
-    
-    return f(count)
-
+"""
+    This function converts angles to refs for each motor of the arm.
+    Angles must be provided in degrees. Internally they are converted into radians. 
+    The result is a ref value (int).
+"""
 def angle_to_ref(motor, angle):
+    
     f = lambda x:0
     if motor == 1:
         f = lambda x:int(-3 * x)
@@ -49,8 +24,13 @@ def angle_to_ref(motor, angle):
     elif motor ==4:
         f = lambda x:int(-17.61158871 * x)
     
-    return f(angle)
+    degreesToRadians = lambda x: pi*x/180.0
+    return f(degreesToRadians(angle))
 
+"""
+    This function converts refs to angles for each motor of the arm.
+    Refs are integer values and angles are in degrees.
+"""
 def ref_to_angle(motor, ref):
     f = lambda x:0
     if motor == 1:
@@ -62,4 +42,5 @@ def ref_to_angle(motor, ref):
     elif motor ==4:
         f = lambda x:(-0.056780795 * x)
     
-    return f(ref)
+    radiansToDegrees = lambda x: 180.0*x/pi
+    return radiansToDegrees(f(ref))
