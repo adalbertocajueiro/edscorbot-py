@@ -20,6 +20,10 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 
+servers:
+    - url: "http://192.168.1.104"
+      description: Development and test environments 
+
 tags:
 - name: translation
   description: Basic functions to convert from NPY to JSON. 
@@ -55,13 +59,13 @@ paths:
                 $ref: '#/components/schemas/ArrayPoints'
              
         500:
-          description: Some other internal error occurred in the server when trying to connect
+          description: Some other internal error occurred in the server 
           content:
             application/json:
               schema:
                 example: 
                   message: Translation error
-                  status: server error
+                  status: internal server error
 
 components:
   schemas:
