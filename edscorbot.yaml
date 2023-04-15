@@ -1,0 +1,81 @@
+openapi: 3.0.9
+info:
+  description: |- 
+    This Web API contains the specification of microservices providing support for converting 
+    NPY files into JSON format. This functionality is intended to be used in the EDScorbot front-end. 
+
+    The documentation about the routes are available individually. 
+    
+    Some useful links:
+    - This server has been developed using [Flask](https://readthedocs.org/projects/flask) - a lightweight WSGI web application framework
+    - [EDScorbot Python microservice](https://github.com/adalbertocajueiro/edscorbot-py) - a Python implementation 
+    of this Web API used in the EDScorbot project and available for download.
+
+  version: "1.0.0"
+  title: "EDScorbot Python API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "adalberto@computacao.ufcg.edu.br"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+tags:
+- name: translation
+  description: Basic functions to convert from NPY to JSON. 
+
+paths:
+  /python/convert:
+    post:
+      tags:
+      - translation
+      operationId: convertFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                sourceType:
+                  type: string
+                targetType:
+                  type: string
+                hasTimeInfo:
+                  type: boolean
+                
+      responses:
+        200:
+          description: Translation success
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/ArrayPoints'
+             
+        500:
+          description: Some other internal error occurred in the server when trying to connect
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Translation error
+                  status: server error
+
+components:
+  schemas:
+    Joint:
+      type: integer
+      description: The reference value (angle in degrees) of a joint.
+    Point:
+      type: array
+      description: A tuple (set of coordinates) containing (possibly many) information about the angles of the joints and one information (the last coordinate) meaning the time to wait before accepting the next move command. The representation of a point as an array allows many robots to be handled as there is no fixed number of joints. This is formation should be obtained bu clients before connecting to a specific arm. 
+      items:
+        $ref: '#/components/schemas/Joint'
+    
+    ArrayPoints:
+      type: array
+      description: A array of points to be applied to the arm.
+      items:
+        $ref: '#/components/schemas/Point'
