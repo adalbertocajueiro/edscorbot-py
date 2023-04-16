@@ -40,6 +40,9 @@ Run these commands to install the dependencies if necessary:
 To add conversion support for a new robotic arm, you need to handle two specific files:
 * `conversions.py` - this file contains the conversion functions specific to each robotic arm. You just have to create two funcions: `angle_to_ref_NEW_ROBOT_NAME` containing the body to convert one angle (given in radians as a double value) to reference value (integer) for each motor individually, and `ref_to_angle_NEW_ROBOT_NAME` containing the body to convert one reference value (integer) to an angle (in radians) returned as a double value. The following figure shows an example:
 
+![Example of conversion function](/images/conversion-func-example.png "Example of conversion function")
+
+
 ### Extra information
 * [Ed Scorbot Python] (https://github.com/RTC-research-group/Py-EDScorbotTool) - the Github project containing the library (real implementation) of elementary/low level functions to access the robotic arm
 * [Ed Scorbot Documentation] (https://py-edscorbottool.readthedocs.io/en/latest/) - the user documentation/guide of the ED Scorbot tools (GUI, command line and detailed configurations). 

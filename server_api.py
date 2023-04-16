@@ -5,8 +5,26 @@ from datetime import datetime
 from math import pi
 import conversions as convFunctions
 
+robotFunctionsMap = {
+    """
+    This map keeps specific functions to any robots to provide conversion support. 
+    Robots are identified by a name and must have two conversion function implementations:
+    `angle_to_ref` and `ref_to_angle` to be applied to each point of the trajectory.
+    These funcions must be implemented in file conversions.py and added to this map
+    as a new entry (key,value) in a similar way to the existing one.
 
-def convertNpy(file,sourceType,targetType,outputFolder,hasTimeInfo):
+    Returns:
+        map<string,ojb>: a map containing the conversion functions for each robotic arm supported
+        by this service
+    """
+    
+    "EDScorbot": {
+        "angle_to_ref":  convFunctions.angle_to_ref_edscorbot,
+        "ref_to_angle":  convFunctions.ref_to_angle_edscorbot  
+    }
+}
+
+def convertNpy(file,sourceType,targetType,outputFolder,hasTimeInfo, robotName):
     """
     The conversion function to be applies in all points of a file in order to produce
     a JSON output of transformed points.
@@ -29,7 +47,7 @@ def convertNpy(file,sourceType,targetType,outputFolder,hasTimeInfo):
     arr = np.load(file)
     list = arr.tolist()
     #apply the conversion between sourceTye and targetType. they can assume values 1 (DEGREE),2(RADIANS),3 (REFS) and 4 (COUTNERS)
-    convertedList = realConvert(list,sourceType,targetType,hasTimeInfo)
+    convertedList = realConvert(list,sourceType,targetType,hasTimeInfo,robotName)
     json_str = json.dumps(convertedList)
     nameParts = file.split("/")
     name = nameParts[len(nameParts) - 1].split(".")
@@ -41,26 +59,43 @@ def convertNpy(file,sourceType,targetType,outputFolder,hasTimeInfo):
     print('converted file ', convertedFileName)
     return convertedFileName
 
-def realConvert(list,sourceType,targetType,hasTimeInfo):
+def realConvert(list,sourceType,targetType,hasTimeInfo,robotName):
     #apply the conversion to each element (point) of the list and returns it
     convertedList = []
     for p in list:
-        convertedList.append(convertPoint(p,sourceType,targetType,hasTimeInfo))
+        convertedList.append(lowLevelConvertion(p,sourceType,targetType,hasTimeInfo,robotName))
         
     return convertedList
 
-def convertPoint(point, sourceType,targetType,hasTimeInfo):
-    return lowLevelConvertion(point,sourceType,targetType,hasTimeInfo)
-
-def lowLevelConvertion(point,sourceType,targetType,hasTimeInfo):
+def lowLevelConvertion(point,sourceType,targetType,hasTimeInfo,robotName):
     """
-        
+    The low level function that converts one point (array/list of coordinates) into
+    a point with coordinates in another (target) type. The function first captures
+    the suitable conversion functions for the robotic arm (from the map) and uses
+    them during the conversion. Each robot has its conversion functions that are maintained 
+    in a map.
+    
+        Args:
+            point: The point to be converted
+            
+            sourceType: The type of the information of each point: DEGREES(1), RADIANS(2) or REFERENCES(3)
+            
+            targetType: The type of the target information of each point: DEGREES(1), RADIANS(2) or REFERENCES(3)
+            
+            outputFolder: The folder where the translated content will be saved
+            
+            hasTimeInfo: A flag to inform if the file contains time information as las coordinate of each point
+            
+            robotName: The name of the robot
+    
+        Returns:
+            point: A list of coordinates converted to the target type
     """
     convertedPoint = []
     conversionFunction = lambda x:0
     if sourceType == 1: #angle in degree
         if targetType == 2: #to radians
-            conversionFunction = lambda x: pi*x/180.0
+            conversionFunction = lambda x: pi*x/180.0 
             if hasTimeInfo: # last coordinate is time and does not aplies to it
                 for motor,coord in enumerate(point,start=1) :
                     if(motor < len(point)):
@@ -72,15 +107,18 @@ def lowLevelConvertion(point,sourceType,targetType,hasTimeInfo):
                     convertedPoint.append(conversionFunction(coord))
             
         elif targetType == 3: # to ref
-            conversionFunction = convFunctions.angle_to_ref
+            # gets the suitable function
+            conversionFunction = robotFunctionsMap[robotName]["angle_to_ref"]
+            #angles must be given in radians
+            intermediatePoint = lowLevelConvertion(point,1,2,hasTimeInfo,robotName)
             if hasTimeInfo: # last coordinate is time and does not aplies to it
-                for motor,coord in enumerate(point,start=1) :
-                    if(motor < len(point)):
+                for motor,coord in enumerate(intermediatePoint,start=1) :
+                    if(motor < len(intermediatePoint)):
                         convertedPoint.append(conversionFunction(motor,coord))
                     else:
                         convertedPoint.append(coord)
             else:
-                for motor,coord in enumerate(point,start=1):
+                for motor,coord in enumerate(intermediatePoint,start=1):
                     convertedPoint.append(conversionFunction(motor,coord))
                 
     elif sourceType == 2: #angles in radians
@@ -97,11 +135,16 @@ def lowLevelConvertion(point,sourceType,targetType,hasTimeInfo):
                     convertedPoint.append(conversionFunction(coord))
         elif targetType == 3: # to ref (radians to ref)
             # first converto from radians to degree and then from degree to ref
-            intermediatePoint = lowLevelConvertion(point,2,1,hasTimeInfo)
-            convertedPoint = lowLevelConvertion(intermediatePoint,1,3,hasTimeInfo)
+            intermediatePoint = lowLevelConvertion(point,2,1,hasTimeInfo,robotName)
+            convertedPoint = lowLevelConvertion(intermediatePoint,1,3,hasTimeInfo,robotName)
     elif sourceType == 3: #refs
         if targetType == 1: #angles in degree
-            conversionFunction = convFunctions.ref_to_angle
+            # converts to an intermediate point in radians
+            intermediatePoint = lowLevelConvertion(point,3,2,hasTimeInfo,robotName)
+            #converts the intermediate point in radians to degree
+            convertedPoint = lowLevelConvertion(intermediatePoint,2,1,hasTimeInfo,robotName)
+        elif targetType == 2: #angles in radians
+            conversionFunction = robotFunctionsMap[robotName]["ref_to_angle"]
             if hasTimeInfo: # last coordinate is time and does not aplies to it
                 for motor,coord in enumerate(point,start=1) :
                     if(motor < len(point)):
@@ -111,8 +154,5 @@ def lowLevelConvertion(point,sourceType,targetType,hasTimeInfo):
             else:
                 for motor,coord in enumerate(point,start=1):
                     convertedPoint.append(conversionFunction(motor,coord))
-        elif targetType == 2: #angles in radians
-            intermediatePoint = lowLevelConvertion(point,3,1,hasTimeInfo)
-            convertedPoint = lowLevelConvertion(intermediatePoint,1,2,hasTimeInfo)
 
     return convertedPoint

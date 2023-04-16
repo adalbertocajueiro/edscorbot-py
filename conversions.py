@@ -7,16 +7,22 @@
 
 from math import pi
 
-"""
+
+def angle_to_ref_edscorbot(motor, angle):
+    """
     This function converts angles to refs for each motor of the arm.
-    Angles must be provided in degrees. Internally they are converted into radians. 
+    It is assumed that the angle is given in radians. Internally they are converted into radians. 
     The result is a ref value (int).
-"""
-def angle_to_ref(motor, angle):
     
-    f = lambda x:0
-    if motor == 1:
-        f = lambda x:int(-3 * x)
+        Args:
+            motor: the motor to consider when applying the conversion
+            
+            angle: the angle in radians to be converted
+    """
+    
+    f = lambda x:0  
+    if motor == 1:  
+        f = lambda x:int(-3 * x)    
     elif motor == 2:
         f = lambda x:int(-9.4 * x)
     elif motor == 3:
@@ -24,14 +30,20 @@ def angle_to_ref(motor, angle):
     elif motor ==4:
         f = lambda x:int(-17.61158871 * x)
     
-    degreesToRadians = lambda x: pi*x/180.0
-    return f(degreesToRadians(angle))
+    return f(angle)
 
-"""
-    This function converts refs to angles for each motor of the arm.
-    Refs are integer values and angles are in degrees.
-"""
-def ref_to_angle(motor, ref):
+
+def ref_to_angle_edscorbot(motor, ref):
+    """
+    This function converts reference values to angles for each motor of the arm.
+    References are integer values and angles are double values in radians.
+    
+        Args:
+            motor: the motor to consider when applying the conversion
+            
+            ref: the reference value
+    """
+
     f = lambda x:0
     if motor == 1:
         f = lambda x:((-1 / 3) * x)
@@ -42,5 +54,4 @@ def ref_to_angle(motor, ref):
     elif motor ==4:
         f = lambda x:(-0.056780795 * x)
     
-    radiansToDegrees = lambda x: 180.0*x/pi
-    return radiansToDegrees(f(ref))
+    return f(ref)
