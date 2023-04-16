@@ -28,7 +28,7 @@ Run these commands to install the dependencies if necessary:
 * `conversions.py` - the low level function implementations for converting coordinates among the types DEGREES, RADIANS and RERECENCES. For each robot, there are two functions: 
   - `angle_to_ref_ROBOTNAME` - a from angle (in radians) to reference value implementation for a specific robot
   - `ref_to_angle_ROBOTNAME` - a from reference value to angle (in radians) implementation for a specific robot
-* `edscobrot.yaml` - the openapi specification of the microservice
+* `edscorbot.yaml` - the openapi specification of the microservice
 
 ### Running instructions
 * This simple server has been tested in Python 3.10.5 
@@ -42,6 +42,9 @@ To add conversion support for a new robotic arm, you need to handle two specific
 
 ![Example of conversion function](/images/conversion-func-example.png "Example of conversion function")
 
+* `server_api.py` - this file contains a map (`robotFunctionsMap` from robot name to an object containing two conversion functions: `angle_to_ref` and `ref_to_angle`). The object containing the conversion functions is represented as a map from function name to function definition. The following figure illustrates these structures for a specific robot("EDScorbot")
+
+![Example of robot conversion functions](/images/robot-map.png "Example of map containing conversion functions for a specific robot")
 
 ### Extra information
 * [Ed Scorbot Python] (https://github.com/RTC-research-group/Py-EDScorbotTool) - the Github project containing the library (real implementation) of elementary/low level functions to access the robotic arm
