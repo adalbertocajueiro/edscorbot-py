@@ -1,6 +1,6 @@
 
 """
-    This modulueprovides conversions fuctions used by the front-end. 
+    This module provides conversions fuctions used by the front-end. 
     These functions are applicable individually to each motor to convert
     values between angles (degrees or radians) 
 """

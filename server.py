@@ -25,13 +25,14 @@ def convertFile():
     srcType = int(request.form['sourceType'])
     tgtType = int(request.form['targetType'])
     hasTimeInfo = request.form['hasTimeInfo'].lower() == "true"
+    robotName = request.form['robotName']
     
     filename = secure_filename(f.filename)
     
     file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     print('file ', file)
     f.save(file)
-    outputFileName = api.convertNpy(file,srcType,tgtType,app.config['UPLOAD_FOLDER'],hasTimeInfo)
+    outputFileName = api.convertNpy(file,srcType,tgtType,app.config['UPLOAD_FOLDER'],hasTimeInfo,robotName)
         
     return send_file(outputFileName, as_attachment=True)
 
