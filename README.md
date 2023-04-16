@@ -42,10 +42,14 @@ To add conversion support for a new robotic arm, you need to handle two specific
 
 ![Example of conversion function](/images/conversion-func-example.png "Example of conversion function")
 
+    To add conversion support to other robotic arm, add two new similar functions with other names to this file. 
+
 * `server_api.py` - this file contains a map (`robotFunctionsMap` from robot name to an object containing two conversion functions: `angle_to_ref` and `ref_to_angle`). The object containing the conversion functions is represented as a map from function name to function definition. The following figure illustrates these structures for a specific robot("EDScorbot")
 
 ![Example of robot conversion functions](/images/robot-map.png "Example of map containing conversion functions for a specific robot")
 
+    To add conversion support to other robotic arm, add another element to the map `robotFunctionsMap` similarly to the existing one and reuse the suitable functions implemented in `conversions.py` 
+    
 ### Extra information
 * [Ed Scorbot Python] (https://github.com/RTC-research-group/Py-EDScorbotTool) - the Github project containing the library (real implementation) of elementary/low level functions to access the robotic arm
 * [Ed Scorbot Documentation] (https://py-edscorbottool.readthedocs.io/en/latest/) - the user documentation/guide of the ED Scorbot tools (GUI, command line and detailed configurations). 
