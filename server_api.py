@@ -5,8 +5,7 @@ from datetime import datetime
 from math import pi
 import conversions as convFunctions
 
-robotFunctionsMap = {
-    """
+"""
     This map keeps specific functions to any robots to provide conversion support. 
     Robots are identified by a name and must have two conversion function implementations:
     `angle_to_ref` and `ref_to_angle` to be applied to each point of the trajectory.
@@ -16,11 +15,11 @@ robotFunctionsMap = {
     Returns:
         map<string,ojb>: a map containing the conversion functions for each robotic arm supported
         by this service
-    """
-    
-    "EDScorbot": {
-        "angle_to_ref":  convFunctions.angle_to_ref_edscorbot,
-        "ref_to_angle":  convFunctions.ref_to_angle_edscorbot  
+"""
+robotFunctionsMap = {    
+    'EDScorbot': {
+        'angle_to_ref':  convFunctions.angle_to_ref_edscorbot,
+        'ref_to_angle':  convFunctions.ref_to_angle_edscorbot  
     }
 }
 
