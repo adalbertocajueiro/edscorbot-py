@@ -44,7 +44,7 @@ To add conversion support for a new robotic arm, you need to handle two specific
 
 To add conversion support to other robotic arm, add two new similar functions with other names to this file. 
 
-* `server_api.py` - this file contains a map (`robotFunctionsMap` from robot name to an object containing two conversion functions: `angle_to_ref` and `ref_to_angle`). The object containing the conversion functions is represented as a map from function name to function definition. The following figure illustrates these structures for a specific robot("EDScorbot")
+* `server_api.py` - this file imports the previous one (`import conversions as convFunctions`) and contains a map (`robotFunctionsMap` from robot name to an object containing two conversion functions: `angle_to_ref` and `ref_to_angle`). The object containing the conversion functions is represented as a map from function name to function definition. The following figure illustrates these structures for a specific robot("EDScorbot")
 
 ![Example of robot conversion functions](/images/robot-functions-map.png "Example of map containing conversion functions for a specific robot")
 
