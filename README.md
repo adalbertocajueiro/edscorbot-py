@@ -49,7 +49,7 @@ To add conversion support to other robotic arm, add two new similar functions wi
 ![Example of robot conversion functions](/images/robot-functions-map.png "Example of map containing conversion functions for a specific robot")
 
 To add conversion support to other robotic arm, add another element to the map `robotFunctionsMap` similarly to the existing one and reuse the suitable functions implemented in `conversions.py` 
-    
-### Extra information
-* [Ed Scorbot Python] (https://github.com/RTC-research-group/Py-EDScorbotTool) - the Github project containing the library (real implementation) of elementary/low level functions to access the robotic arm
-* [Ed Scorbot Documentation] (https://py-edscorbottool.readthedocs.io/en/latest/) - the user documentation/guide of the ED Scorbot tools (GUI, command line and detailed configurations). 
+
+### Reference Documentation
+For further reference, please consider the following items:
+* [EDScorbot Github Project](https://github.com/RTC-research-group/Py-EDScorbotTool) - the main Github project with details about the entire project and the low level code to control the robotic arm
