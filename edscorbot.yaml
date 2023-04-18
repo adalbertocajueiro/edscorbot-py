@@ -25,15 +25,19 @@ servers:
       description: Development and test environments 
 
 tags:
-- name: translation
-  description: Basic functions to convert from NPY to JSON. 
-
+  - name: file_manipulation
+    description: Functions for manipulating NPY files
+    
 paths:
-  /python/convert:
+  /python/load:
     post:
       tags:
-      - translation
-      operationId: convertFile
+        - file_manipulation
+      operationId: loadFile
+      summary: Loads the content of a NPY file
+      description: It loads the content of a NPY file and returns it as a list of points
+        in a JSON object.
+
       requestBody:
         content:
           multipart/form-data:
@@ -43,12 +47,46 @@ paths:
                 file:
                   type: string
                   format: binary
+                
+      responses:
+        200:
+          description: Load content success
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/ArrayPoints'
+             
+        500:
+          description: Some other internal error occurred in the server 
+          content:
+            application/json:
+              schema:
+                example: 
+                  message: Translation error
+                  status: internal server error
+  /python/convert:
+    post:
+      tags:
+      - file_manipulation
+      operationId: convertFile
+      summary: Converts the content of an array of points
+      description: It converts the content of an array of points and returns it as a list of points in a JSON object.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
                 sourceType:
                   type: string
                 targetType:
                   type: string
                 hasTimeInfo:
                   type: boolean
+                robotName:
+                  type: string
                 
       responses:
         200:
