@@ -19,7 +19,6 @@ Run these commands to install the dependencies if necessary:
 * Flask CORS (`pip install flask_cors`)
 * Werkzeug (`pip install werkzeug`)
 * Numpy (`pip install numpy`)
-* Json (`pip install json`)
 * Datetime (`pip install datetime`)
 
 ### Files
