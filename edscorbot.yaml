@@ -54,7 +54,11 @@ paths:
           content:
             application/octet-stream:
               schema:
-                $ref: '#/components/schemas/ArrayPoints'
+                example:
+                  [
+                    [1,1,1,1,1,1,200],
+                    [2,2,2,2,2,2,200]
+                  ] 
              
         500:
           description: Some other internal error occurred in the server 
@@ -94,7 +98,11 @@ paths:
           content:
             application/octet-stream:
               schema:
-                $ref: '#/components/schemas/ArrayPoints'
+                example:
+                  [
+                    [1,1,1,1,1,1,200],
+                    [2,2,2,2,2,2,200]
+                  ] 
              
         500:
           description: Some other internal error occurred in the server 
@@ -104,20 +112,3 @@ paths:
                 example: 
                   message: Translation error
                   status: internal server error
-
-components:
-  schemas:
-    Joint:
-      type: integer
-      description: The reference value (angle in degrees) of a joint.
-    Point:
-      type: array
-      description: A tuple (set of coordinates) containing (possibly many) information about the angles of the joints and one information (the last coordinate) meaning the time to wait before accepting the next move command. The representation of a point as an array allows many robots to be handled as there is no fixed number of joints. This is formation should be obtained bu clients before connecting to a specific arm. 
-      items:
-        $ref: '#/components/schemas/Joint'
-    
-    ArrayPoints:
-      type: array
-      description: A array of points to be applied to the arm.
-      items:
-        $ref: '#/components/schemas/Point'
