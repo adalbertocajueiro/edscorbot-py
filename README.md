@@ -24,16 +24,16 @@ Run these commands to install the dependencies if necessary:
 ### Files
 * `server.py` - contains a simple server that launches the service on port 5000 (default por for Flask applications).
 * `server_api.py` - contains the high level function implementing the conversion of NPY into JSON file. 
-* `conversions.py` - the low level function implementations for converting coordinates among the types DEGREES, RADIANS and RERECENCES. For each robot, there are two functions: 
-  - `angle_to_ref_ROBOTNAME` - a from angle (in radians) to reference value implementation for a specific robot
-  - `ref_to_angle_ROBOTNAME` - a from reference value to angle (in radians) implementation for a specific robot
+* `conversions.py` - the low level function implementations for converting coordinates among the types DEGREES, RADIANS and REFERENCE values. For each robot, there are two functions: 
+  - `angle_to_ref_ROBOT_NAME` - a from angle to reference value implementation for a specific robot
+  - `ref_to_angle_ROBOT_NAME` - a from reference value to angle implementation for a specific robot
 * `edscorbot.yaml` - the openapi specification of the microservice
 
 ### Running instructions
 * This simple server has been tested in Python 3.10.5 
 * Type the command `python server.py` and the server should be up
 * Make sure that the port 5000 is not in use
-* You can test the route `/python/convert` via POST method using tools like Postman or Insomnia
+* You can test the routes `/python/load` and `/python/convert` via POST method using tools like Postman or Insomnia
 
 ### Adding support to a new robotic arm
 To add conversion support for a new robotic arm, you need to handle two specific files:
@@ -52,3 +52,5 @@ To add conversion support to other robotic arm, add another element to the map `
 ### Reference Documentation
 For further reference, please consider the following items:
 * [EDScorbot Github Project](https://github.com/RTC-research-group/Py-EDScorbotTool) - the main Github project with details about the entire project and the low level code to control the robotic arm
+* [EDScorbot Documentation](https://py-edscorbottool.readthedocs.io/en/latest/) - documentation about the entire project
+* [The asynchronous API specification](https://app.swaggerhub.com/apis-docs/ADALBERTOCAJUEIRO_1/ed-scorbot_async/1.0.0) followed by this microservice.
